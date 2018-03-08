@@ -2,23 +2,23 @@
 
 
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
+-- Company:
+-- Engineer:
+--
 -- Create Date: 12/03/2017 06:53:00 PM
--- Design Name: 
+-- Design Name:
 -- Module Name: VPPM - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
+-- Project Name:
+-- Target Devices:
+-- Tool Versions:
+-- Description:
+--
+-- Dependencies:
+--
 -- Revision:
 -- Revision 0.01 - File Created
 -- Additional Comments:
--- 
+--
 ----------------------------------------------------------------------------------
 
 
@@ -35,9 +35,9 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity OPPM is
-    Port ( inputo : in STD_LOGIC;
+    Port (
     clk : in std_logic;
-    four_bit_code: in std_logic_vector(9 downto 0);
+    two_bit_input: in std_logic_vector(1 downto 0);
     out_pulse :out std_logic
     --output: out std_logic_vector(9 downto 0)
     );
@@ -48,46 +48,31 @@ end OPPM;
 architecture Behavioral of OPPM is
 
 component mul
-  Port ( 
+  Port (
 in_pulse: in std_logic;
 out_puls: out std_logic
 );
 end component;
 
-signal input: std_logic;
 signal output : std_logic_vector(9 downto 0);
 signal clk1: std_logic;
 signal flag : std_logic_vector(9 downto 0) := "0000000000" ;
 signal temp : std_logic;
 begin
-input<= inputo after 50 ns;
-process(input)
-begin
-
-process 
-begin 
-with four_bit_code select output<=
-    "0000000000" when "0000",
-    "0000111111" when "0001",
-    "0001111110" when "0010",
-    "0001111111" when "0011",
-    "0011111100" when "0100",
-    "0011111110" when "0101",
-    "0011111111" when "0110",
-    "0111111000" when "0111",
-    "0111111100" when "1000",
-    "0111111110" when "1001",
-    "0111111111" when "1010",
-    "1111110000" when "1011",
-    "1111111000" when "1100",
-    "1111111100" when "1101",
-    "1111111110" when "1110",
-    "1111111111" when others;
 
 
 
 
-x: mul port map(clk,clk1);
+with two_bit_input select output<=
+    "1111100000" when "00",
+    "0111110000" when "01",
+    "0011111000" when "10",
+    "0001111100" when others;
+
+
+
+
+x: mul port map(clk,clk1);  -- clk1 is the fast clock
 
 process(clk1,flag)
 begin
@@ -130,23 +115,23 @@ out_pulse <= temp;
 end Behavioral;
 
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
+-- Company:
+-- Engineer:
+--
 -- Create Date: 12/09/2017 04:21:13 PM
--- Design Name: 
+-- Design Name:
 -- Module Name: 1-2 - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
+-- Project Name:
+-- Target Devices:
+-- Tool Versions:
+-- Description:
+--
+-- Dependencies:
+--
 -- Revision:
 -- Revision 0.01 - File Created
 -- Additional Comments:
--- 
+--
 ----------------------------------------------------------------------------------
 
 
@@ -162,15 +147,14 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity mul is
-  Port ( 
+entity mul is   -- Clock  multiplier
+  Port (
   in_pulse: in std_logic;
   out_puls: out std_logic
   );
 end mul;
 
 architecture Behavioral of mul is
---variable I : integer range 0 to 2000000000;
 signal q1 : std_logic;
 signal q2 : std_logic;
 signal q3 : std_logic;
@@ -192,18 +176,8 @@ q5<= in_pulse after 25 ns;
 q6<= in_pulse after 30 ns;
 q7<= in_pulse after 35 ns;
 q8<= in_pulse after 40 ns;
-q9<= in_pulse after 45 ns;
+q9<= in_pulse after 45 ns;   --- Causes a delay of 45 ns in the production
 
 end process;
-out_puls <= in_pulse xor q1 xor q2 xor q3 xor q4 xor q5 xor q6 xor q7 xor q8 xor q9 ; 
+out_puls <= in_pulse xor q1 xor q2 xor q3 xor q4 xor q5 xor q6 xor q7 xor q8 xor q9 ;
 end Behavioral;
-
-
-
-
-
-
-
-
-
-
